@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:gravity="center">
+<androidx.recyclerview.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/crime_recycler_view"
-    >
+    ></androidx.recyclerview.widget.RecyclerView>
 
-</androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+ <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+     android:textColor="@android:color/holo_red_light"
+     android:textSize="24sp"
+     android:visibility="gone"
+        android:text="@string/no_data" />
+<Button
+        android:id="@+id/new_crime_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:background="@android:color/holo_blue_bright"
+        android:visibility="gone"
+        android:text="@string/new_crime"/>
+
+</LinearLayout>
+
+</LinearLayout>
