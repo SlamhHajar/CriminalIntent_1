@@ -34,6 +34,7 @@ private const val REQUEST_DATE = 0
 private const val REQUEST_TIME = 1
 private const val DATE_FORMAT = "EEE, MMM, dd"
 private const val REQUEST_CONTACT = 2
+private const val REQUEST_DAIL = 3
 class CrimeFragment:Fragment(),DatePickerFragment.Callbacks,TimePickerFragment.Callbacks {
     override fun onDateSelected(date: Date) {
         crime.date = date
@@ -47,6 +48,7 @@ class CrimeFragment:Fragment(),DatePickerFragment.Callbacks,TimePickerFragment.C
     private lateinit var solvedCheckBox: CheckBox
     private lateinit var reportButton: Button
     private lateinit var suspectButton: Button
+    private lateinit var suspectphone: Button
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)    }
     //////////////////////////////////////////////////////
@@ -87,6 +89,7 @@ val view=inflater.inflate(R.layout.fragment_crime,container,false)
            solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
         reportButton = view.findViewById(R.id.crime_report) as Button
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
+        suspectphone = view.findViewById(R.id.suspect_phone) as Button
 
 //            dateButton.apply {
 //               text = crime.date.toString()
@@ -131,6 +134,7 @@ val view=inflater.inflate(R.layout.fragment_crime,container,false)
             getString(R.string.crime_report_no_suspect)
         } else {
             getString(R.string.crime_report_suspect, crime.suspect)
+            getString(R.string.crime_report_suspect, crime.suspect_phone)
         }
         return getString(R.string.crime_report,
             crime.title, dateString, solvedString, suspect)
@@ -141,7 +145,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         resultCode != Activity.RESULT_OK -> return
         requestCode == REQUEST_CONTACT && data != null -> {
             val contactUri: Uri? = data.data
-            val queryFields= arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+           // val queryFields= arrayOf(ContactsContract.Contacts.DISPLAY_NAME,ContactsContract.Contacts._ID)//to get a contact ID on your original query
+        val queryFields= arrayOf(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER)//ContactsContract.CommonDataKinds.Phone That Connect betwen number and Name with out qury to phone number
             val cursor = requireActivity().contentResolver
                 .query(contactUri!!, queryFields, null, null, null)
             cursor?.use {
@@ -149,12 +155,22 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
                  return
                  }
                 it.moveToFirst()
-
                 val suspect = it.getString(0)
+                val suspect_phone = it.getString(1) //to get number phone
+
                 crime.suspect=suspect
+                crime.suspect_phone=suspect_phone //to store number on database
                 crimeDetailViewModel.saveCrime(crime)
                 suspectButton.setText(crime.suspect)
-        }
+                suspectphone.setText(crime.suspect_phone)// to display number on button
+        ////////////////////////////// try with out ContactsContract.CommonDataKinds.Phone on name
+ // val suspect_id = it.getString(1)//ID to connected with phone number to get a contact ID on your original query
+               // val phoneUri= ContactsContract.CommonDataKinds.Phone.CONTENT_URI  //The MIME type of CONTENT_URI providing a directory of phones.
+          //    val  queryPhone=arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+         //   var sort=arrayOf(suspect_id)
+               // val cursorPhone = requireActivity().contentResolver
+         // .query(phoneUri, queryPhone, ContactsContract.CommonDataKinds.Phone.CONTACT_ID "= ?",null ,null )
+ }
 
         }}}
     override fun onStop() {
@@ -221,7 +237,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
             }
         }
         suspectButton.apply {
-            val pickContactIntent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+            val pickContactIntent = Intent(Intent.ACTION_PICK,ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
             setOnClickListener {
                 startActivityForResult(pickContactIntent, REQUEST_CONTACT)
             }
@@ -236,7 +252,21 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
             }
 
         }
-    }
+        suspectphone.apply {
+            val pickContactIntent = Intent(Intent.ACTION_DIAL)
+            pickContactIntent.data = Uri.parse("tel:${crime.suspect_phone}")
+            setOnClickListener {
+
+                startActivityForResult(pickContactIntent, REQUEST_DAIL)
+            }
+            val packageManager: PackageManager = requireActivity().packageManager
+            val resolvedActivity: ResolveInfo? =
+                packageManager.resolveActivity(pickContactIntent,
+                    PackageManager.MATCH_DEFAULT_ONLY)
+            if (resolvedActivity == null) {
+                isEnabled = false
+            }
+    }}
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onTimeSelected(time: Date) {

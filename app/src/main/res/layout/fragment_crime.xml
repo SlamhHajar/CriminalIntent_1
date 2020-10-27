@@ -43,11 +43,19 @@
         android:id="@+id/crime_suspect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_light"
         android:text="@string/crime_suspect_text"/>
+    <Button
+        android:id="@+id/suspect_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="@string/suspect_phone"/>
     <Button
         android:id="@+id/crime_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/holo_purple"
         android:text="@string/crime_report_text"/>
 
 </LinearLayout>
