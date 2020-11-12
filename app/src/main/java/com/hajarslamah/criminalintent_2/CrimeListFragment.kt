@@ -167,7 +167,12 @@ class CrimeListFragment:Fragment() {
              return CrimeViewHolder(crimeNormalView)
 
         }
-       // override fun getItemCount() = crimes.size
+
+        //override fun getItemCount(){
+       //     if (crime.isEmpty()) {
+
+         //   }
+       // }
 
         override fun onBindViewHolder(holder: CrimeViewHolder, position: Int) {
             val crime = getItem(position)

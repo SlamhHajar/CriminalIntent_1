@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhotoDialogFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/photo_view_dialog"
+        android:layout_width="300dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="zoom photo"
+        android:background="@android:color/darker_gray"
+     />
+
+</FrameLayout>
+    <!-- adjustViewBounds it will then ensure the image is fit into the View, and maintain the aspect ratio.
+    -->
