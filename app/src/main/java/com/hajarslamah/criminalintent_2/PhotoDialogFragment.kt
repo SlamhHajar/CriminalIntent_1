@@ -20,8 +20,7 @@ private const val PHOTO_ARGU = "photo"
  * create an instance of this fragment.
  */
 class PhotoDialogFragment : DialogFragment() {
-    // TODO: Rename and change types of parameters
-  //    private var photo: String? = null
+
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -64,13 +63,13 @@ return AlertDialog.Builder(requireContext())
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(photoFile: File) =
-                PhotoDialogFragment().apply {
+        fun newInstance(photoFile: File):PhotoDialogFragment {
+              return  PhotoDialogFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(PHOTO_ARGU, photoFile)
 
                     }
 
                 }
-    }
+    }}
 }
